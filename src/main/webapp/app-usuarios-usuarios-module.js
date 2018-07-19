@@ -1,5 +1,537 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["app-usuarios-usuarios-module"],{
 
+/***/ "./node_modules/angular2-materialize/dist/custom-event-polyfill.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/angular2-materialize/dist/custom-event-polyfill.js ***!
+  \*************************************************************************/
+/*! exports provided: CustomEvent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CustomEvent", function() { return CustomEvent; });
+/**
+ * @param {?} type
+ * @param {?=} detail
+ * @param {?=} params
+ * @return {?}
+ */
+function CustomEvent(type, detail, params) {
+    if (detail === void 0) { detail = undefined; }
+    if (params === void 0) { params = { bubbles: false, cancelable: false }; }
+    var /** @type {?} */ event = document.createEvent('CustomEvent');
+    event.initCustomEvent(type, params.bubbles, params.cancelable, detail);
+    return event;
+}
+if ("Event" in window) {
+    CustomEvent.prototype = ((window)).Event.prototype;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/angular2-materialize/dist/index.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/angular2-materialize/dist/index.js ***!
+  \*********************************************************/
+/*! exports provided: MaterializeDirective, MaterializeModule, toast */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toast", function() { return toast; });
+/* harmony import */ var _materialize_directive__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./materialize-directive */ "./node_modules/angular2-materialize/dist/materialize-directive.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MaterializeDirective", function() { return _materialize_directive__WEBPACK_IMPORTED_MODULE_0__["MaterializeDirective"]; });
+
+/* harmony import */ var _materialize_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./materialize-module */ "./node_modules/angular2-materialize/dist/materialize-module.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MaterializeModule", function() { return _materialize_module__WEBPACK_IMPORTED_MODULE_1__["MaterializeModule"]; });
+
+
+
+if (!("Materialize" in window)) {
+    throw new Error("Couldn't find Materialize object on window. It is created by the materialize-css library. Please import materialize-css before importing angular2-materialize.");
+}
+if (!("Waves" in window)) {
+    throw new Error("Couldn't find Waves object on window. It is supposed to be created by the materialize-css library. Please import materialize-css before importing angular2-materialize.");
+}
+Waves.displayEffect();
+/**
+ * @param {...?} args
+ * @return {?}
+ */
+function toast() {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    Materialize.toast.apply(Materialize, args);
+}
+// polyfill remove any elem in DOM - https://github.com/InfomediaLtd/angular2-materialize/issues/377 (IE)
+if (!Element.prototype.remove) {
+    Element.prototype.remove = function remove() {
+        if (this.parentNode) {
+            this.parentNode.removeChild(this);
+        }
+    };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/angular2-materialize/dist/materialize-directive.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/angular2-materialize/dist/materialize-directive.js ***!
+  \*************************************************************************/
+/*! exports provided: MaterializeDirective */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MaterializeDirective", function() { return MaterializeDirective; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _custom_event_polyfill__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./custom-event-polyfill */ "./node_modules/angular2-materialize/dist/custom-event-polyfill.js");
+
+
+var MaterializeDirective = (function () {
+    /**
+     * @param {?} _el
+     */
+    function MaterializeDirective(_el) {
+        this._el = _el;
+        this._params = null;
+        this._functionName = null;
+        this.previousValue = null;
+        this.previousDisabled = false;
+        this._waitFunction = {};
+        this.changeListenerShouldBeAdded = true;
+        this.init = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        this.initialized = false;
+    }
+    Object.defineProperty(MaterializeDirective.prototype, "materializeParams", {
+        /**
+         * @param {?} params
+         * @return {?}
+         */
+        set: function (params) {
+            this._params = params;
+            this.performElementUpdates();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(MaterializeDirective.prototype, "materializeActions", {
+        /**
+         * @param {?} actions
+         * @return {?}
+         */
+        set: function (actions) {
+            var _this = this;
+            actions.subscribe(function (action) {
+                window.setTimeout(function () {
+                    if (typeof action === "string") {
+                        _this.performLocalElementUpdates(action);
+                    }
+                    else {
+                        _this.performLocalElementUpdates(action.action, action.params);
+                    }
+                }, 1);
+            });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(MaterializeDirective.prototype, "materialize", {
+        /**
+         * @param {?} functionName
+         * @return {?}
+         */
+        set: function (functionName) {
+            this._functionName = functionName;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(MaterializeDirective.prototype, "materializeSelectOptions", {
+        /**
+         * @param {?} options
+         * @return {?}
+         */
+        set: function (options) {
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.ngAfterViewInit = function () {
+        this.performElementUpdates();
+    };
+    /**
+     * @param {?=} _unused
+     * @return {?}
+     */
+    MaterializeDirective.prototype.ngOnChanges = function (_unused) {
+        var _this = this;
+        if (this.isSelect()) {
+            setTimeout(function () { return _this.performLocalElementUpdates(); }, 10);
+        }
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.ngOnDestroy = function () {
+        this.performElementRemotion();
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.ngDoCheck = function () {
+        var /** @type {?} */ nativeElement = this._el.nativeElement;
+        var /** @type {?} */ jQueryElement = $(nativeElement);
+        if (this.isSelect()) {
+            var /** @type {?} */ shouldUpdate = false;
+            if (nativeElement.disabled != this.previousDisabled) {
+                this.previousDisabled = nativeElement.disabled;
+                shouldUpdate = true;
+            }
+            if (!jQueryElement.attr("multiple") && nativeElement.value != this.previousValue) {
+                // handle select changes of the model
+                this.previousValue = nativeElement.value;
+                shouldUpdate = true;
+            }
+            if (shouldUpdate) {
+                this.performLocalElementUpdates();
+            }
+        }
+        else if (this.isTextarea()) {
+            if (nativeElement.value != this.previousValue) {
+                this.previousValue = nativeElement.value;
+                this.performElementUpdates();
+            }
+        }
+        return false;
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.performElementRemotion = function () {
+        if (this.isTooltip()) {
+            var /** @type {?} */ nativeElement = this._el.nativeElement;
+            var /** @type {?} */ jQueryElement = $(nativeElement);
+            var /** @type {?} */ tooltipId = jQueryElement.attr('data-tooltip-id');
+            if (tooltipId) {
+                $('#' + tooltipId).remove();
+            }
+        }
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.performElementUpdates = function () {
+        var _this = this;
+        // it should have been created by now, but confirm anyway
+        if (Materialize && Materialize.updateTextFields) {
+            Materialize.updateTextFields();
+        }
+        // handle select changes from the HTML
+        if (this.isSelect() && this.changeListenerShouldBeAdded) {
+            var /** @type {?} */ nativeElement_1 = this._el.nativeElement;
+            var /** @type {?} */ jQueryElement = $(nativeElement_1);
+            jQueryElement.on("change", function (e) {
+                if (!e.originalEvent || !e.originalEvent.internalToMaterialize) {
+                    var /** @type {?} */ event_1 = document.createEvent("CustomEvent");
+                    //if (jQueryElement.attr("multiple")) {
+                    //event.initCustomEvent("input",false,false,undefined);
+                    //}
+                    //else {
+                    event_1.initCustomEvent("change", false, false, undefined);
+                    //}
+                    event_1.internalToMaterialize = true;
+                    nativeElement_1.dispatchEvent(event_1);
+                }
+            });
+            this.changeListenerShouldBeAdded = false;
+        }
+        if (this.isAutocomplete()) {
+            var /** @type {?} */ nativeElement_2 = this._el.nativeElement;
+            var /** @type {?} */ jQueryElement = $(nativeElement_2);
+            jQueryElement.on("change", function (e) { return nativeElement_2.dispatchEvent(((Object(_custom_event_polyfill__WEBPACK_IMPORTED_MODULE_1__["CustomEvent"])("input")))); });
+        }
+        if (this.isDatePicker()) {
+            var /** @type {?} */ nativeElement_3 = this._el.nativeElement;
+            var /** @type {?} */ jqueryPickerElement_1 = $(nativeElement_3);
+            var /** @type {?} */ datePicker = jqueryPickerElement_1[this._functionName].apply(jqueryPickerElement_1, this._params);
+            var /** @type {?} */ picker_1 = datePicker.pickadate('picker');
+            setTimeout(function () {
+                if (_this.ngModel) {
+                    picker_1.set('select', _this.ngModel);
+                }
+                else {
+                    var /** @type {?} */ value = jqueryPickerElement_1.val();
+                    if (value && value.length > 0) {
+                        picker_1.set('select', value);
+                    }
+                }
+                jqueryPickerElement_1.on('change', function (e) { return nativeElement_3.dispatchEvent(((Object(_custom_event_polyfill__WEBPACK_IMPORTED_MODULE_1__["CustomEvent"])("input")))); });
+            });
+        }
+        if (this.isTimePicker()) {
+            var /** @type {?} */ nativeElement_4 = this._el.nativeElement;
+            var /** @type {?} */ jqueryPickerElement_2 = $(nativeElement_4);
+            var /** @type {?} */ timePicker = jqueryPickerElement_2[this._functionName].apply(jqueryPickerElement_2, this._params);
+            var /** @type {?} */ picker_2 = timePicker.pickatime('picker');
+            setTimeout(function () {
+                if (_this.ngModel) {
+                    picker_2.val(_this.ngModel);
+                }
+                else {
+                    picker_2.val(jqueryPickerElement_2.val());
+                }
+                jqueryPickerElement_2.on('change', function (e) { return nativeElement_4.dispatchEvent(((Object(_custom_event_polyfill__WEBPACK_IMPORTED_MODULE_1__["CustomEvent"])("input")))); });
+            });
+        }
+        if (this.isChips()) {
+            var /** @type {?} */ nativeElement_5 = this._el.nativeElement;
+            var /** @type {?} */ jQueryElement = $(nativeElement_5);
+            jQueryElement.on("chip.add", function (e, chip) { return nativeElement_5.dispatchEvent(((Object(_custom_event_polyfill__WEBPACK_IMPORTED_MODULE_1__["CustomEvent"])("chip.add", chip)))); });
+            jQueryElement.on("chip.delete", function (e, chip) { return nativeElement_5.dispatchEvent(((Object(_custom_event_polyfill__WEBPACK_IMPORTED_MODULE_1__["CustomEvent"])("chip.delete", chip)))); });
+            jQueryElement.on("chip.select", function (e, chip) { return nativeElement_5.dispatchEvent(((Object(_custom_event_polyfill__WEBPACK_IMPORTED_MODULE_1__["CustomEvent"])("chip.select", chip)))); });
+        }
+        if (this.isTextarea()) {
+            this._el.nativeElement.dispatchEvent(((Object(_custom_event_polyfill__WEBPACK_IMPORTED_MODULE_1__["CustomEvent"])("autoresize", {
+                bubbles: true,
+                cancelable: false,
+                detail: undefined
+            }))));
+        }
+        this.performLocalElementUpdates();
+    };
+    /**
+     * @param {?=} functionName
+     * @param {?=} params
+     * @return {?}
+     */
+    MaterializeDirective.prototype.performLocalElementUpdates = function (functionName, params) {
+        var _this = this;
+        if (functionName === void 0) { functionName = this._functionName; }
+        if (params === void 0) { params = this._params; }
+        if (this._waitFunction[functionName]) {
+            return;
+        }
+        this._waitFunction[functionName] = true;
+        $(document).ready(function () {
+            _this._waitFunction[functionName] = false;
+            if (functionName) {
+                var /** @type {?} */ jQueryElement = $(_this._el.nativeElement);
+                if (jQueryElement[functionName]) {
+                    if (params) {
+                        if (params instanceof Array) {
+                            jQueryElement[functionName].apply(jQueryElement, params);
+                        }
+                        else {
+                            throw new Error("Params has to be an array.");
+                        }
+                    }
+                    else {
+                        jQueryElement[functionName]();
+                    }
+                }
+                else {
+                    // fallback to running this function on the global Materialize object
+                    if (Materialize[functionName]) {
+                        if (params) {
+                            if (params instanceof Array) {
+                                Materialize[functionName].apply(Materialize, params);
+                            }
+                            else {
+                                throw new Error("Params has to be an array.");
+                            }
+                        }
+                        else {
+                            Materialize[functionName]();
+                        }
+                    }
+                    else {
+                        throw new Error("Couldn't find materialize function ''" + functionName + "' on element or the global Materialize object.");
+                    }
+                }
+                if (!_this.initialized) {
+                    _this.initialized = true;
+                    _this.init.emit();
+                }
+            }
+        });
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.isTooltip = function () {
+        return (this._functionName && this._functionName === "tooltip");
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.isSelect = function () {
+        return (this._functionName && this._functionName === "material_select");
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.isDatePicker = function () {
+        return (this._functionName && this._functionName === "pickadate");
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.isTimePicker = function () {
+        return (this._functionName && this._functionName === "pickatime");
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.isChips = function () {
+        return (this._functionName && this._functionName === "material_chip");
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.isAutocomplete = function () {
+        return (this._functionName && this._functionName === "autocomplete");
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.isTextarea = function () {
+        return this._el.nativeElement.nodeName == "TEXTAREA";
+    };
+    /**
+     * @return {?}
+     */
+    MaterializeDirective.prototype.enableDPButtons = function () {
+        $('.picker__clear').removeAttr("disabled");
+        $('.picker__today').removeAttr("disabled");
+        $('.picker__close').removeAttr("disabled");
+        $('.picker__select--year').removeAttr("disabled");
+        $('.picker__select--month').removeAttr("disabled");
+    };
+    return MaterializeDirective;
+}());
+
+MaterializeDirective.decorators = [
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Directive"], args: [{
+                selector: '[materialize]'
+            },] },
+];
+/**
+ * @nocollapse
+ */
+MaterializeDirective.ctorParameters = function () { return [
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"], },
+]; };
+MaterializeDirective.propDecorators = {
+    'init': [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"] },],
+    'materializeParams': [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"] },],
+    'materializeActions': [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"] },],
+    'materialize': [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"] },],
+    'materializeSelectOptions': [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"] },],
+    'ngModel': [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"] },],
+};
+function MaterializeDirective_tsickle_Closure_declarations() {
+    /** @type {?} */
+    MaterializeDirective.decorators;
+    /**
+     * @nocollapse
+     * @type {?}
+     */
+    MaterializeDirective.ctorParameters;
+    /** @type {?} */
+    MaterializeDirective.propDecorators;
+    /** @type {?} */
+    MaterializeDirective.prototype._params;
+    /** @type {?} */
+    MaterializeDirective.prototype._functionName;
+    /** @type {?} */
+    MaterializeDirective.prototype.previousValue;
+    /** @type {?} */
+    MaterializeDirective.prototype.previousDisabled;
+    /** @type {?} */
+    MaterializeDirective.prototype._waitFunction;
+    /** @type {?} */
+    MaterializeDirective.prototype.changeListenerShouldBeAdded;
+    /** @type {?} */
+    MaterializeDirective.prototype.init;
+    /** @type {?} */
+    MaterializeDirective.prototype.initialized;
+    /** @type {?} */
+    MaterializeDirective.prototype.ngModel;
+    /** @type {?} */
+    MaterializeDirective.prototype._el;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/angular2-materialize/dist/materialize-module.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/angular2-materialize/dist/materialize-module.js ***!
+  \**********************************************************************/
+/*! exports provided: MaterializeModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MaterializeModule", function() { return MaterializeModule; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _materialize_directive__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./materialize-directive */ "./node_modules/angular2-materialize/dist/materialize-directive.js");
+
+
+
+var MaterializeModule = (function () {
+    function MaterializeModule() {
+    }
+    /**
+     * @return {?}
+     */
+    MaterializeModule.forRoot = function () {
+        return {
+            ngModule: MaterializeModule
+        };
+    };
+    return MaterializeModule;
+}());
+
+MaterializeModule.decorators = [
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"], args: [{
+                declarations: [
+                    _materialize_directive__WEBPACK_IMPORTED_MODULE_2__["MaterializeDirective"]
+                ],
+                imports: [
+                    _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"]
+                ],
+                exports: [
+                    _materialize_directive__WEBPACK_IMPORTED_MODULE_2__["MaterializeDirective"]
+                ]
+            },] },
+];
+/**
+ * @nocollapse
+ */
+MaterializeModule.ctorParameters = function () { return []; };
+function MaterializeModule_tsickle_Closure_declarations() {
+    /** @type {?} */
+    MaterializeModule.decorators;
+    /**
+     * @nocollapse
+     * @type {?}
+     */
+    MaterializeModule.ctorParameters;
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/hammerjs/hammer.js":
 /*!*****************************************!*\
   !*** ./node_modules/hammerjs/hammer.js ***!
@@ -66098,44 +66630,6 @@ exports["default"] = FloydWarshall;
 
 /***/ }),
 
-/***/ "./src/app/usuarios/message.service.ts":
-/*!*********************************************!*\
-  !*** ./src/app/usuarios/message.service.ts ***!
-  \*********************************************/
-/*! exports provided: MessageService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MessageService", function() { return MessageService; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
-var MessageService = /** @class */ (function () {
-    function MessageService() {
-        this.messages = [];
-    }
-    MessageService.prototype.add = function (message) {
-        this.messages.push(message);
-    };
-    MessageService.prototype.clear = function () {
-        this.messages = [];
-    };
-    MessageService = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({ providedIn: 'root' })
-    ], MessageService);
-    return MessageService;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/usuarios/timeline/log-operacoes.service.ts":
 /*!************************************************************!*\
   !*** ./src/app/usuarios/timeline/log-operacoes.service.ts ***!
@@ -66150,7 +66644,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _message_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../message.service */ "./src/app/usuarios/message.service.ts");
+/* harmony import */ var _message_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../message.service */ "./src/app/message.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -66234,7 +66728,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h5>Timeline dos Usuarios</h5>\n<br>\n<div class=\"row\">\n\t<div class=\"input-field col s12 m6 l6\">\n\t    <select [(ngModel)]=\"usuarioSelecionado\">\n\t      <option value=\"\" disabled selected>Selecione o Usuario</option>\n\t      <option *ngFor=\"let usuario of usuarios\" [ngValue]=\"usuario\">{{ usuario.nome }}</option>\n\t    </select>\n\t    <label>Materialize Select</label>\n\t</div>\n\t<div class=\"col s12 m6 l6\">\n\t\t<p>Nome: {{usuario.nome}}</p>\n\t\t<p>Email: {{ log.email }}</p>\n\t\t<p>Telefone: {{ log.telefone }}</p>\n\t</div>\n</div>\n<div class=\"col s12\" id=\"visualization\"></div>\n"
+module.exports = "<h5>Timeline dos Usuarios</h5>\n<br>\n<div class=\"row\" [hidden]=\"!usuarios\">\n\t<div class=\"input-field col s12 m6 l6\">\n\t    <select materialize=\"material_select\" [ngModel]=\"usuarioSelecionado\" \n\t    \t(ngModelChange)=\"onChange($event)\" name=\"user\"\n\t    \t[materializeSelectOptions]=\"usuarios\">\n\t      <option value=\"\" disabled selected>Selecione</option>\n\t      <option *ngFor=\"let u of usuarios\" [ngValue]=\"u\">{{ u.nome }}</option>\n\t    </select>\n\t    <label>Selecione o Usuário</label>\n\t</div>\n\t<div class=\"col s12 m6 l6\">\n\t\t<p>Nome: {{usuario?.nome}}</p>\n\t\t<p>Email: {{ usuario?.email }}</p>\n\t\t<p>Telefone: {{ usuario?.telefone }}</p>\n\t</div>\n</div>\n<div class=\"col s12\" id=\"visualization\"></div>\n"
 
 /***/ }),
 
@@ -66257,6 +66751,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _usuarios_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../usuarios.service */ "./src/app/usuarios/usuarios.service.ts");
+/* harmony import */ var _log_operacoes_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./log-operacoes.service */ "./src/app/usuarios/timeline/log-operacoes.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -66272,25 +66767,40 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var TimelineComponent = /** @class */ (function () {
-    function TimelineComponent(route, usuariosService) {
+    function TimelineComponent(route, usuariosService, logOperacoesService) {
         this.route = route;
         this.usuariosService = usuariosService;
+        this.logOperacoesService = logOperacoesService;
         this.day = new Date();
         this.min = this.day.setHours(0); // 0 horas
         this.max = this.day.setHours(23); // 23:59 horas
     }
     TimelineComponent.prototype.loadTimeline = function (data) {
-        console.log(data);
         var d = [];
         for (var i = 0; i < data.length; i++) {
-            d.push({ id: i,
-                start: new Date(),
-                content: data[i].nome,
-                email: data[i].email
+            d.push({ id: data[i].id,
+                start: data[i].dataHora,
+                content: this.usuario.nome + " " + data[i].detalhe,
+                nome: this.usuario.nome,
+                email: this.usuario.email,
+                telefone: this.usuario.telefone
             });
         }
         return d;
+    };
+    TimelineComponent.prototype.onChange = function (value) {
+        var _this = this;
+        this.items.clear();
+        if (value !== null) {
+            this.usuario = value;
+            this.logOperacoesService.getLogByUserId(this.usuario.id)
+                .subscribe(function (logs) {
+                _this.logsOp = logs;
+                _this.items.add(_this.loadTimeline(logs));
+            });
+        }
     };
     TimelineComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -66299,7 +66809,6 @@ var TimelineComponent = /** @class */ (function () {
         this.usuariosService.getUsuarios()
             .subscribe(function (users) {
             _this.usuarios = users;
-            _this.items.add(_this.loadTimeline(users));
         });
         var options = {
             showCurrentTime: true,
@@ -66336,9 +66845,11 @@ var TimelineComponent = /** @class */ (function () {
             onUpdate: function (item, callback) {
                 sweetalert2__WEBPACK_IMPORTED_MODULE_4___default()({
                     title: item.content,
-                    html: '<div align="left" style="margin-left: 3em"><p><p><b>Email: </b> '
-                        + item.email + '</p><p><b>Data: </b>'
-                        + item.start + '</p></div>'
+                    html: '<div align="left" style="margin-left: 3em"><p><p><b>Nome: </b> '
+                        + item.nome + '</p><p><b>Email: </b>'
+                        + item.email + '</p><p><b>Telefone: </b>'
+                        + item.telefone + '</p><p><b>Data/Hora: </b>'
+                        + new Date(item.start) + '</p></div>'
                 }).then(function (ok) {
                     if (ok) {
                         callback(item); // send back adjusted item
@@ -66349,27 +66860,6 @@ var TimelineComponent = /** @class */ (function () {
                 });
             }
         };
-        //this.items = new vis.DataSet(this.loadTimeline(this.usuarios));
-        // Configuration for the Timeline
-        // function prettyConfirm(title, text, callback) {
-        //    swal({
-        //      title: title,
-        //      text: text,
-        //      type: 'warning',
-        //      showCancelButton: true,
-        //      confirmButtonColor: "#DD6B55"
-        //   	}).then(() => callback);
-        //   }
-        //   function prettyPrompt(title, text, inputValue, callback) {
-        //    swal({
-        //      title: title,
-        //      text: text,
-        //      type: 'input',
-        //      showCancelButton: true,
-        //      inputValue: inputValue
-        //    }).then(() => callback);
-        //   }
-        // Create a Timeline
         new vis__WEBPACK_IMPORTED_MODULE_3__["Timeline"](container, this.items, options);
     };
     TimelineComponent = __decorate([
@@ -66379,7 +66869,8 @@ var TimelineComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./timeline.component.css */ "./src/app/usuarios/timeline/timeline.component.css")]
         }),
         __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
-            _usuarios_service__WEBPACK_IMPORTED_MODULE_5__["UsuariosService"]])
+            _usuarios_service__WEBPACK_IMPORTED_MODULE_5__["UsuariosService"],
+            _log_operacoes_service__WEBPACK_IMPORTED_MODULE_6__["LogOperacoesService"]])
     ], TimelineComponent);
     return TimelineComponent;
 }());
@@ -66406,7 +66897,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col s12 m8 offset-m2 s6 offset-s3\" *ngIf=\"usuario\">\n  <div class=\"card center\">\n      <div class=\"card-content\">\n        <h5>{{ func }} Usuario</h5>\n        <div class=\"row\">\n          <div class=\"input-field col s12\">\n            <input id=\"nome\" [(ngModel)]=\"usuario.nome\" type=\"text\" class=\"validate\">\n            <label for=\"nome\" class=\"active\">Nome</label>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"input-field col s12\">\n            <input id=\"email\" [(ngModel)]=\"usuario.email\" type=\"email\" class=\"validate\">\n            <label for=\"email\" class=\"active\">Email</label>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"input-field col s12\">\n            <input id=\"senha\" [(ngModel)]=\"usuario.senha\" type=\"password\" class=\"validate\">\n            <label for=\"senha\" class=\"active\">Senha</label>\n          </div>\n        </div>\n        <div class=\"row\">\n          <div class=\"input-field col s12\">\n            <input id=\"telefone\" [(ngModel)]=\"usuario.telefone\" type=\"text\" class=\"validate\">\n            <label for=\"telefone\" class=\"active\">Telefone</label>\n          </div>\n        </div>\n        <a class=\"waves-effect waves-light btn\" (click)=\"salvar()\">Salvar</a>\n    </div>\n  </div>\n</div> "
+module.exports = "<div class=\"col s12 m8 offset-m2 s6 offset-s3\" *ngIf=\"usuario\">\n  <div class=\"card center\">\n      <div class=\"card-content\">\n        <h5>{{ func }} Usuario</h5>\n          <div class=\"row\">\n            <div class=\"input-field col s12\">\n              <input id=\"nome\" [(ngModel)]=\"usuario.nome\" type=\"text\" class=\"validate\">\n              <label for=\"nome\" class=\"active\">Nome</label>\n            </div>\n          </div>\n          <div class=\"row\">\n            <div class=\"input-field col s12\">\n              <input id=\"email\" [(ngModel)]=\"usuario.email\" type=\"email\" class=\"validate\">\n              <label for=\"email\" class=\"active\">Email</label>\n            </div>\n          </div>\n          <div class=\"row\">\n            <div class=\"input-field col s12\">\n              <input id=\"senha\" [(ngModel)]=\"usuario.senha\" type=\"password\" \n                class=\"validate\" name=\"senha\">\n              <label for=\"senha\" class=\"active\">Senha</label>\n            </div>\n          </div>\n          <div class=\"row\">\n            <div class=\"input-field col s12\">\n              <input id=\"telefone\" [(ngModel)]=\"usuario.telefone\" type=\"text\" class=\"validate\">\n              <label for=\"telefone\" class=\"active\">Telefone</label>\n            </div>\n          </div>\n          <button class=\"waves-effect waves-light btn\" type=\"submit\" (click)=\"salvar()\">Salvar</button>\n      </div>\n  </div>\n</div> "
 
 /***/ }),
 
@@ -66497,26 +66988,6 @@ var UsuarioFormComponent = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/usuarios/usuario.ts":
-/*!*************************************!*\
-  !*** ./src/app/usuarios/usuario.ts ***!
-  \*************************************/
-/*! exports provided: Usuario */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Usuario", function() { return Usuario; });
-var Usuario = /** @class */ (function () {
-    function Usuario() {
-    }
-    return Usuario;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/usuarios/usuarios.component.css":
 /*!*************************************************!*\
   !*** ./src/app/usuarios/usuarios.component.css ***!
@@ -66535,7 +67006,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n\t<div class=\"col s6\">\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col s6\">\n\t\t\t\t<h5>Lista de Usuarios</h5>\n\t\t\t</div>\n\t\t\t<div class=\"col s6\">\n\t\t\t\t<a class=\"waves-effect waves-light btn\" (click)=\"novoUsuario()\">Novo</a>\n\t\t\t</div>\n\t\t</div>\n\t\t<ul class=\"collection\">\n\t\t\t<li class=\"collection-item avatar\" \n\t\t\t\t*ngFor=\"let usuario of usuarios\">\n\t\t\t\t<i class=\"material-icons circle orange darken-2\">tag_faces</i>\n\t\t\t\t<span class=\"title\">{{ usuario.nome }}</span>\n\t\t\t\t<p>{{ usuario.email }} <br>\n\t\t\t\t {{ usuario.detalhe }}\n\t\t\t\t</p>\n\t\t\t\t<a class=\"secondary-content btn-floating red darken-2\" (click)=\"usuarioSelecionado(usuario)\">\n\t\t\t\t\t<i class=\"material-icons\">add</i>\n\t\t\t\t</a>\n\t\t    </li>\n\t\t</ul>\n\t</div>\n\n\t<div class=\"col s6\">\n\t\t<label *ngIf=\"estaSelec\" class=\"center\">\n\t\t\t<h5>Selecione um usuário para ver os detalhes.</h5>\n\t\t</label>\n\t\t<div *ngIf=\"!estaSelec\">\n\t\t\t<h5>Detalhes do Usuario</h5>\n\t\t\t<br>\n\t\t\t<p>Id: {{ usuario.id }}</p>\n\t\t\t<p>Nome: {{ usuario.nome }}</p>\n\t\t\t<p>Email: {{ usuario.email }}</p>\n\n\t\t\t<div class=\"row\">\n\t\t\t\t<div class=\"col s6\">\n\t\t\t\t\t<a class=\"waves-effect waves-light btn orange lighten-2\" \n\t\t\t\t\t\t(click)=\"editarUsuario()\">Editar</a>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"col s6\">\n\t\t\t\t\t<a class=\"waves-effect waves-light btn red darken-2\" \n\t\t\t\t\t\t(click)=\"deletar(usuario)\">Deletar Usuario</a>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>"
+module.exports = "<div class=\"row\" [hidden]=\"!usuarios\">\n\t<div class=\"col s12 m12 l6\">\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col s6\">\n\t\t\t\t<h5>Lista de Usuarios</h5>\n\t\t\t</div>\n\t\t\t<div class=\"col s6\">\n\t\t\t\t<a class=\"waves-effect waves-light btn\" (click)=\"novoUsuario()\">Novo</a>\n\t\t\t</div>\n\t\t</div>\n\t\t<ul class=\"collection\">\n\t\t\t<li class=\"collection-item avatar\" \n\t\t\t\t*ngFor=\"let usuario of usuarios\">\n\t\t\t\t<i class=\"material-icons circle orange darken-2\">tag_faces</i>\n\t\t\t\t<span class=\"title\">{{ usuario.nome }}</span>\n\t\t\t\t<p>{{ usuario.email }} <br>\n\t\t\t\t {{ usuario.detalhe }}\n\t\t\t\t</p>\n\t\t\t\t<a class=\"secondary-content btn-floating red darken-2\" (click)=\"usuarioSelecionado(usuario)\">\n\t\t\t\t\t<i class=\"material-icons\">add</i>\n\t\t\t\t</a>\n\t\t    </li>\n\t\t</ul>\n\t</div>\n\n\t<div class=\"col s12 m12 l6\">\n\t\t<label *ngIf=\"estaSelec\" class=\"center\">\n\t\t\t<h5>Selecione um usuário para ver os detalhes.</h5>\n\t\t</label>\n\t\t<div *ngIf=\"!estaSelec\">\n\t\t\t<h5>Detalhes do Usuario</h5>\n\t\t\t<br>\n\t\t\t<p>Id: {{ usuario.id }}</p>\n\t\t\t<p>Nome: {{ usuario.nome }}</p>\n\t\t\t<p>Email: {{ usuario.email }}</p>\n\n\t\t\t<div class=\"row\">\n\t\t\t\t<div class=\"col s6\">\n\t\t\t\t\t<a class=\"waves-effect waves-light btn orange lighten-2\" \n\t\t\t\t\t\t(click)=\"editarUsuario()\">Editar</a>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"col s6\">\n\t\t\t\t\t<a class=\"waves-effect waves-light btn red darken-2\" \n\t\t\t\t\t\t(click)=\"deletar(usuario)\">Deletar Usuario</a>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>"
 
 /***/ }),
 
@@ -66621,18 +67092,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _usuarios_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./usuarios.component */ "./src/app/usuarios/usuarios.component.ts");
-/* harmony import */ var _usuario_form_usuario_form_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./usuario-form/usuario-form.component */ "./src/app/usuarios/usuario-form/usuario-form.component.ts");
-/* harmony import */ var _usuarios_routing_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./usuarios.routing.module */ "./src/app/usuarios/usuarios.routing.module.ts");
-/* harmony import */ var _usuarios_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./usuarios.service */ "./src/app/usuarios/usuarios.service.ts");
-/* harmony import */ var _timeline_log_operacoes_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./timeline/log-operacoes.service */ "./src/app/usuarios/timeline/log-operacoes.service.ts");
-/* harmony import */ var _timeline_timeline_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./timeline/timeline.component */ "./src/app/usuarios/timeline/timeline.component.ts");
+/* harmony import */ var angular2_materialize__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! angular2-materialize */ "./node_modules/angular2-materialize/dist/index.js");
+/* harmony import */ var _usuarios_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./usuarios.component */ "./src/app/usuarios/usuarios.component.ts");
+/* harmony import */ var _usuario_form_usuario_form_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./usuario-form/usuario-form.component */ "./src/app/usuarios/usuario-form/usuario-form.component.ts");
+/* harmony import */ var _usuarios_routing_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./usuarios.routing.module */ "./src/app/usuarios/usuarios.routing.module.ts");
+/* harmony import */ var _usuarios_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./usuarios.service */ "./src/app/usuarios/usuarios.service.ts");
+/* harmony import */ var _timeline_log_operacoes_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./timeline/log-operacoes.service */ "./src/app/usuarios/timeline/log-operacoes.service.ts");
+/* harmony import */ var _timeline_timeline_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./timeline/timeline.component */ "./src/app/usuarios/timeline/timeline.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -66650,15 +67123,16 @@ var UsuariosModule = /** @class */ (function () {
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormsModule"],
-                _usuarios_routing_module__WEBPACK_IMPORTED_MODULE_5__["UsuariosRoutingModule"]
+                _usuarios_routing_module__WEBPACK_IMPORTED_MODULE_6__["UsuariosRoutingModule"]
             ],
-            exports: [],
             declarations: [
-                _usuarios_component__WEBPACK_IMPORTED_MODULE_3__["UsuariosComponent"],
-                _usuario_form_usuario_form_component__WEBPACK_IMPORTED_MODULE_4__["UsuarioFormComponent"],
-                _timeline_timeline_component__WEBPACK_IMPORTED_MODULE_8__["TimelineComponent"]
+                angular2_materialize__WEBPACK_IMPORTED_MODULE_3__["MaterializeDirective"],
+                _usuarios_component__WEBPACK_IMPORTED_MODULE_4__["UsuariosComponent"],
+                _usuario_form_usuario_form_component__WEBPACK_IMPORTED_MODULE_5__["UsuarioFormComponent"],
+                _timeline_timeline_component__WEBPACK_IMPORTED_MODULE_9__["TimelineComponent"]
             ],
-            providers: [_usuarios_service__WEBPACK_IMPORTED_MODULE_6__["UsuariosService"], _timeline_log_operacoes_service__WEBPACK_IMPORTED_MODULE_7__["LogOperacoesService"]],
+            providers: [_usuarios_service__WEBPACK_IMPORTED_MODULE_7__["UsuariosService"], _timeline_log_operacoes_service__WEBPACK_IMPORTED_MODULE_8__["LogOperacoesService"]],
+            exports: [angular2_materialize__WEBPACK_IMPORTED_MODULE_3__["MaterializeDirective"]]
         })
     ], UsuariosModule);
     return UsuariosModule;
@@ -66710,102 +67184,6 @@ var UsuariosRoutingModule = /** @class */ (function () {
         })
     ], UsuariosRoutingModule);
     return UsuariosRoutingModule;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/usuarios/usuarios.service.ts":
-/*!**********************************************!*\
-  !*** ./src/app/usuarios/usuarios.service.ts ***!
-  \**********************************************/
-/*! exports provided: UsuariosService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UsuariosService", function() { return UsuariosService; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _message_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./message.service */ "./src/app/usuarios/message.service.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-var HTTP_OPTIONS = {
-    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Content-Type': 'application/json' })
-};
-var UsuariosService = /** @class */ (function () {
-    function UsuariosService(http, messageService) {
-        this.http = http;
-        this.messageService = messageService;
-        this.API_URL = "http://localhost:8080/timelinecrud/";
-    }
-    // private usuarios: any[] = [
-    // 	{id: 1, nome: 'Usuario 01', email: 'usuario01@email.com', dataHora: new Date()},
-    // 	{id: 2, nome: 'Usuario 02', email: 'usuario02@email.com', dataHora: new Date()},
-    // 	{id: 3, nome: 'Usuario 03', email: 'usuario03@email.com', dataHora: new Date()}
-    // ];
-    UsuariosService.prototype.getUsuarios = function () {
-        var _this = this;
-        return this.http.get(this.API_URL + 'getAll')
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function (response) { return _this.log('fetched heroes'); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(this.handleError('getAll', [])));
-    };
-    UsuariosService.prototype.getUsuario = function (id) {
-        var _this = this;
-        var URL = this.API_URL + "/getById?id=" + id;
-        return this.http.get(URL).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function (_) { return _this.log("fetched usuario id=" + id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(this.handleError("getById id=" + id)));
-    };
-    //////// Save methods //////////
-    /** POST: add a new usuario to the server */
-    UsuariosService.prototype.saveUsuario = function (usuario) {
-        var _this = this;
-        return this.http.post(this.API_URL + "/save", usuario, HTTP_OPTIONS).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function (usuario) { return _this.log("added usuario"); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(this.handleError('addUsuario')));
-    };
-    /** DELETE: delete the usuario from the server */
-    UsuariosService.prototype.deleteUsuario = function (usuario) {
-        var _this = this;
-        var ID = typeof usuario === 'number' ? usuario : usuario.id;
-        return this.http.post(this.API_URL + "/delete", ID, HTTP_OPTIONS).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function (_) { return _this.log("deleted usuario id=" + ID); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(this.handleError('deleteUsuario')));
-    };
-    /** PUT: update the usuario on the server */
-    UsuariosService.prototype.updateHero = function (usuario) {
-        var _this = this;
-        return this.http.put(this.API_URL + "/save", usuario, HTTP_OPTIONS).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function (_) { return _this.log("updated usuario id=" + usuario.id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(this.handleError('updateUsuario')));
-    };
-    UsuariosService.prototype.handleError = function (operation, result) {
-        var _this = this;
-        if (operation === void 0) { operation = 'operation'; }
-        return function (error) {
-            // TODO: send the error to remote logging infrastructure
-            console.error(error); // log to console instead
-            // TODO: better job of transforming error for user consumption
-            _this.log(operation + " failed: " + error.message);
-            // Let the app keep running by returning an empty result.
-            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(result);
-        };
-    };
-    UsuariosService.prototype.log = function (message) {
-        this.messageService.add("UsuarioService: " + message);
-    };
-    UsuariosService = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({ providedIn: 'root' }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _message_service__WEBPACK_IMPORTED_MODULE_4__["MessageService"]])
-    ], UsuariosService);
-    return UsuariosService;
 }());
 
 

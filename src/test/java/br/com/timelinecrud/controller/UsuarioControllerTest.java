@@ -38,14 +38,7 @@ public class UsuarioControllerTest extends TestCase{
 		mockMvc.perform(get("/getAll"))
 			.andExpect(status().isOk());
 		}	
-	
-//	@Test
-//	public void getById() throws Exception{
-//				
-//		mockMvc.perform(get("/getById?id=1"))
-//			.andExpect(status().isOk());
-//		}
-	
+		
 	@Test
 	public void getByName() throws Exception{
 				

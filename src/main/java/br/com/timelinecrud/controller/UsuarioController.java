@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import br.com.timelinecrud.model.JacksonView;
 import br.com.timelinecrud.model.LogOperacoes;
 import br.com.timelinecrud.model.Usuario;
 import br.com.timelinecrud.repository.LogOperacoesRepository;
@@ -29,11 +32,11 @@ public class UsuarioController {
 	private LogOperacoesRepository logOperacoesRepo;
 
 	@Transactional
+	@JsonView(JacksonView.Eager.class)
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public @ResponseBody Usuario salvar(@RequestBody Usuario usuario) {
-		System.out.println(usuario);
 		LogOperacoes logOperacoes = new LogOperacoes();
-		if(usuario.getId() == 0) logOperacoes.setDetalhe("Usuario criado");
+		if(usuario.getId() == null || usuario.getId() == 0) logOperacoes.setDetalhe("Usuario criado");
 		else logOperacoes.setDetalhe("Usuario modificado");
 		
 		Usuario user = null;
@@ -57,6 +60,7 @@ public class UsuarioController {
 	}
 	
 	@Transactional
+	@JsonView(JacksonView.Eager.class)
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity<?> remove(@RequestBody Long id) {
 		Usuario user = usuarioRepo.findById(id);
@@ -69,26 +73,31 @@ public class UsuarioController {
 		}
 	}
 
+	@JsonView(JacksonView.Eager.class)
 	@RequestMapping(value = "/getById", method = RequestMethod.GET)
 	public @ResponseBody Usuario buscarId(Long id) {
 		return usuarioRepo.findById(id);
 	}
 
+	@JsonView(JacksonView.Eager.class)
 	@RequestMapping(value = "/getByName", method = RequestMethod.GET)
 	public @ResponseBody Usuario buscarNome(String nome) {
 		return usuarioRepo.findByNome(nome);
 	}
 
+	@JsonView(JacksonView.Eager.class)
 	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<?> getAll() {
 		return new ResponseEntity<List<Usuario>>((List<Usuario>) usuarioRepo.findAll(), HttpStatus.OK);
 	}
 
+	@JsonView(JacksonView.Eager.class)
 	@RequestMapping(value = "/getByNames", method = RequestMethod.GET)
 	public @ResponseBody List<Usuario> buscarNomes(String nome) {
 		return usuarioRepo.listaUsuariosNome(nome);
 	}
 
+	@JsonView(JacksonView.Eager.class)
 	@RequestMapping(value = "/getByIds", method = RequestMethod.GET)
 	public @ResponseBody List<Usuario> buscarListaId(Long id) {
 		return usuarioRepo.findUsuarioById(id);

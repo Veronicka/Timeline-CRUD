@@ -70,7 +70,7 @@ module.exports = ".vis .overlay{position:absolute;top:0;left:0;width:100%;height
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* You can add global styles to this file, and also import other style files */\nbody{\n\tbackground-color: #f7f7f7;\n}\n.marginTop{\n\tmargin-top: 20px !important;\n}\n.marginBottom{\n\tmargin-bottom: 10px;\n}\n.imgLogo{\n\tmax-width: 140px;\n}\n.imgLogin{\n\tmax-width: 170px;\n}"
+module.exports = "/* You can add global styles to this file, and also import other style files */\nbody{\n\tbackground-color: #f7f7f7;\n}\n.marginTop{\n\tmargin-top: 20px !important;\n}\n.marginBottom{\n\tmargin-bottom: 10px;\n}\n.imgLogo{\n\tmax-width: 140px;\n}\n.imgLogin{\n\tmax-width: 170px;\n}\n.ng-valid[required], .ng-valid.required  {\n  border-left: 5px solid #42A948; /* green */\n}\n.ng-invalid:not(form)  {\n  border-left: 5px solid #a94442; /* red */\n}"
 
 /***/ }),
 
@@ -662,10 +662,10 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Documentos\testeJustto\TimelineCrud\src\styles.css */"./src/styles.css");
-__webpack_require__(/*! D:\Documentos\testeJustto\TimelineCrud\node_modules\vis\dist\vis.min.css */"./node_modules/vis/dist/vis.min.css");
-__webpack_require__(/*! D:\Documentos\testeJustto\TimelineCrud\node_modules\materialize-css\dist\css\materialize.css */"./node_modules/materialize-css/dist/css/materialize.css");
-module.exports = __webpack_require__(/*! D:\Documentos\testeJustto\TimelineCrud\node_modules\sweetalert2\dist\sweetalert2.min.css */"./node_modules/sweetalert2/dist/sweetalert2.min.css");
+__webpack_require__(/*! D:\Documentos\Projects\Timeline-CRUD-Front\src\styles.css */"./src/styles.css");
+__webpack_require__(/*! D:\Documentos\Projects\Timeline-CRUD-Front\node_modules\vis\dist\vis.min.css */"./node_modules/vis/dist/vis.min.css");
+__webpack_require__(/*! D:\Documentos\Projects\Timeline-CRUD-Front\node_modules\materialize-css\dist\css\materialize.css */"./node_modules/materialize-css/dist/css/materialize.css");
+module.exports = __webpack_require__(/*! D:\Documentos\Projects\Timeline-CRUD-Front\node_modules\sweetalert2\dist\sweetalert2.min.css */"./node_modules/sweetalert2/dist/sweetalert2.min.css");
 
 
 /***/ })

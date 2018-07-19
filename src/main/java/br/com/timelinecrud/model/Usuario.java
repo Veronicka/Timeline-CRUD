@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "USUARIO")
 public class Usuario implements Serializable{
@@ -21,21 +24,28 @@ public class Usuario implements Serializable{
 	@Id 
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "usuario_id")
+	@JsonView(JacksonView.Eager.class)
 	private Long id;
 	
 	@Column(name = "nome", length = 45, nullable = false)
+	@JsonView(JacksonView.Eager.class)
 	private String nome;
 	
 	@Column(name = "senha", length = 45, nullable = false)
+	@JsonView(JacksonView.Eager.class)
 	private String senha;
 	
 	@Column(name = "email", length = 45, nullable = false)
+	@JsonView(JacksonView.Eager.class)
 	private String email;
 	
 	@Column(name = "telefone", length = 45, nullable = false)
+	@JsonView(JacksonView.Eager.class)
 	private String telefone;
 	
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+	@JsonView(JacksonView.Lazy.class)
+	@JsonIgnore
 	private List<LogOperacoes> logOperacoesList;
 				
 	public Usuario() { }

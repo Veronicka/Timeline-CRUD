@@ -15,6 +15,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "LOG_OPERACOES")
 public class LogOperacoes implements Serializable{
@@ -24,17 +27,22 @@ public class LogOperacoes implements Serializable{
 	@Id 
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "log_id")
+	@JsonView(JacksonView.Eager.class)
 	private Long id;
 	
 	@Column(name = "detalhe", length = 45, nullable = false)
+	@JsonView(JacksonView.Eager.class)
 	private String detalhe;
 		
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "data_hora", nullable = false)
+	@JsonView(JacksonView.Eager.class)
 	private Calendar dataHora;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "usuario_id", nullable = true)
+	@JsonView(JacksonView.Eager.class)
+	@JsonIgnore
 	private Usuario usuario;
 	
 	public LogOperacoes() {	}
